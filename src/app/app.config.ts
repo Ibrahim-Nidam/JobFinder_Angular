@@ -6,6 +6,8 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { errorInterceptor } from './core/interceptors/error-interceptor';
+import { usaJobsAuthInterceptor } from './core/interceptors/usa-jobs-auth-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +17,6 @@ export const appConfig: ApplicationConfig = {
     provideEffects([]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideHttpClient(withInterceptors([]))
+    provideHttpClient(withInterceptors([errorInterceptor, usaJobsAuthInterceptor]))
 ]
 };
