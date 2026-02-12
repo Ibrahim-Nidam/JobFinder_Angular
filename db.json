@@ -1,5 +1,20 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": "92ed",
+      "nom": "bbhbh",
+      "prenom": "jbjb",
+      "email": "bh@jb",
+      "password": "D.ev33R4='3;5fU"
+    },
+    {
+      "id": "9273",
+      "nom": "Nidam",
+      "prenom": "Ibrahim",
+      "email": "bh@jbd",
+      "password": "D.ev33R4='3;5fU"
+    }
+  ],
   "favoritesOffers": [],
   "applications": []
 }
