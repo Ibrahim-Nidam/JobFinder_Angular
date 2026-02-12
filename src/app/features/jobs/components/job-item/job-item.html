@@ -31,8 +31,16 @@
 
   <div class="flex flex-wrap gap-2">
     
-    <a 
-      [href]="job.refs.landing_page" 
+    <button
+      type="button"
+      (click)="onViewDetails()"
+      class="inline-flex cursor-pointer items-center px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition-colors"
+    >
+      Details
+    </button>
+
+    <a
+      [href]="job.refs.landing_page"
       target="_blank"
       class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
     >

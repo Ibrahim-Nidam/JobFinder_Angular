@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Job } from '../../../../core/models/job';
+import { Router } from '@angular/router';
 import { Auth } from '../../../../core/services/auth';
 
 @Component({
@@ -16,7 +17,7 @@ export class JobItem {
   @Output() addToFavorites = new EventEmitter<Job>();
   @Output() trackApplication = new EventEmitter<Job>();
 
-  constructor(public authService: Auth){}
+  constructor(public authService: Auth, private router: Router){}
 
   onAddToFavorites() :void {
     this.addToFavorites.emit(this.job);
@@ -24,6 +25,12 @@ export class JobItem {
 
   onTrackApplication(): void {
     this.trackApplication.emit(this.job);
+  }
+
+  onViewDetails(): void {
+    this.router.navigate(['/jobs/details', this.job.id], {
+      state: { job: this.job }
+    });
   }
 
   getLocation(): string {
