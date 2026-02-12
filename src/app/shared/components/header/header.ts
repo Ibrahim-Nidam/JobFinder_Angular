@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
-import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -9,5 +9,10 @@ import { RouterLink } from "@angular/router";
   styleUrl: './header.css',
 })
 export class Header {
-  constructor(public authService: Auth) {}
+  constructor(public authService: Auth, private router: Router) {}
+
+  onLogout(): void {
+    this.authService.logout();
+    this.router.navigate(['/jobs/search']);
+  }
 }

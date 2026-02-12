@@ -1,12 +1,22 @@
 <nav class="bg-white shadow-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
-      <div class="flex items-center">
-        <h1 class="text-2xl font-bold text-blue-600">JobFinder</h1>
+      <div class="flex items-center gap-6">
+        <a routerLink="/jobs/search" class="text-2xl font-bold text-blue-600">JobFinder</a>
+        <nav class="hidden md:flex items-center gap-4 text-sm">
+          <a routerLink="/jobs/search" class="text-gray-700 hover:text-blue-600">Offres</a>
+          @if (authService.isAuthenticated()) {
+            <a routerLink="/favorites" class="text-gray-700 hover:text-blue-600">Favoris</a>
+            <a routerLink="/applications" class="text-gray-700 hover:text-blue-600">Candidatures</a>
+            <a routerLink="/profile" class="text-gray-700 hover:text-blue-600">Profil</a>
+          }
+        </nav>
       </div>
       <div class="flex items-center gap-4">
           @if (authService.isAuthenticated()) {
-            <a (click)="authService.logout()" class="cursor-pointer p-2 bg-red-600 text-white rounded-md hover:bg-red-700">Logout</a>
+            <button type="button" (click)="onLogout()" class="p-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+              Logout
+            </button>
           } @else {
               <a routerLink="/auth/login" class="text-gray-700 hover:text-blue-600 cursor-pointer">Connexion</a>
               <a routerLink="/auth/register" class="cursor-pointer p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
