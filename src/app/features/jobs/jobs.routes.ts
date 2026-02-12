@@ -7,6 +7,11 @@ export const JOBS_ROUTES: Routes = [
         .then(m => m.JobSearch)
     },
     {
+        path: 'details/:id',
+        loadComponent: () => import('./pages/job-details/job-details')
+        .then(m => m.JobDetails)
+    },
+    {
         path: '',
         redirectTo: 'search',
         pathMatch: 'full'
