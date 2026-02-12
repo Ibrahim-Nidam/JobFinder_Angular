@@ -1,1 +1,69 @@
-<p>job-details works!</p>
+<app-header></app-header>
+
+<div class="min-h-screen bg-gray-50">
+	<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+		@if (!job) {
+			<div class="bg-yellow-50 border border-yellow-200 text-yellow-800 p-6 rounded-md text-center">
+				<p class="text-lg font-medium">Impossible de charger les details de l'offre</p>
+				<p class="mt-2 text-sm">Veuillez revenir a la recherche et choisir une offre.</p>
+				<button
+					class="mt-4 inline-flex items-center px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition-colors"
+					(click)="onBackToSearch()"
+				>
+					Retour a la recherche
+				</button>
+			</div>
+		} @else {
+			<div class="bg-white rounded-lg shadow-md p-8">
+				<div class="mb-6">
+					<h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+						{{ job.name }}
+					</h1>
+					<p class="text-gray-600 mt-2">{{ job.company.name }}</p>
+				</div>
+
+				<div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-6">
+					<span class="flex items-center gap-1">
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+						</svg>
+						{{ getLocation() }}
+					</span>
+					<span>{{ formatDate(job.publication_date) }}</span>
+				</div>
+
+				@if (job.salary && job.salary.min && job.salary.max) {
+					<div class="mb-6 text-sm text-green-700 font-medium">
+						${{ job.salary.min | number:'1.0-0' }} - ${{ job.salary.max | number:'1.0-0' }} {{ job.salary.interval }}
+					</div>
+				}
+
+				<div class="prose max-w-none text-gray-700 mb-6">
+					{{ job.contents }}
+				</div>
+
+				<div class="flex flex-wrap gap-2">
+					<a
+						[href]="job.refs.landing_page"
+						target="_blank"
+						class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+					>
+						Voir l'offre
+						<svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+						</svg>
+					</a>
+					<button
+						class="inline-flex items-center px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition-colors"
+						(click)="onBackToSearch()"
+					>
+						Retour a la recherche
+					</button>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+<app-footer></app-footer>
