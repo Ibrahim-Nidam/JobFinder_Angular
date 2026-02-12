@@ -3,27 +3,21 @@ export interface Job {
     name: string;
     contents: string;
     short_name: string;
-    type: string;
     publication_date: string;
-    model_type: string;
     locations: Location[];
-    categories: Category[];
-    level: Level[];
-    tags: string[];
     refs: {
         landing_page: string;
-    }
+    };
+    company: {
+        name: string;
+    };
+    salary?: {
+        min: string;
+        max: string;
+        interval: string;
+    };
 }
 
 export interface Location {
     name: string;
-}
-
-export interface Category {
-    name: string;
-}
-
-export interface Level {
-    name: string;
-    short_name: string;
 }
