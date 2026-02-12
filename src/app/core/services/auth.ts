@@ -65,4 +65,10 @@ export class Auth {
       map(users => users.length > 0)
     );
   }
+
+  checkEmailTakenForOtherUser(email: string, currentUserId: number | string): Observable<boolean> {
+    return this.http.get<User[]>(`${this.apiUrl}?email=${email}`).pipe(
+      map(users => users.some(user => String(user.id) !== String(currentUserId)))
+    );
+  }
 }
