@@ -14,9 +14,9 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
       </svg>
-      {{ getLocation() }}
+      {{ job | jobLocation }}
     </span>
-    <span>{{ formatDate(job.publication_date) }}</span>
+    <span>{{ job.publication_date | dateFormat }}</span>
   </div>
 
   <p class="text-gray-700 mb-4 line-clamp-3">
@@ -53,16 +53,19 @@
     @if (authService.isAuthenticated()) {
       <button
         (click)="onAddToFavorites()"
-        [disabled]="isFavorite"
-        [class.opacity-50]="isFavorite"
-        [class.cursor-not-allowed]="isFavorite"
-        class="inline-flex items-center px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition-colors disabled:hover:bg-white"
+        [class.bg-blue-50]="isFavorite"
+        [class.border-blue-600]="isFavorite"
+        [class.text-blue-600]="isFavorite"
+        [class.border-gray-300]="!isFavorite"
+        [class.text-gray-700]="!isFavorite"
+        class="inline-flex items-center px-4 py-2 border rounded-md hover:bg-blue-50 transition-colors"
+        [title]="isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'"
       >
         @if (isFavorite) {
           <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
-          Déjà en favoris
+          En favoris
         } @else {
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
@@ -73,12 +76,25 @@
 
       <button
         (click)="onTrackApplication()"
-        class="inline-flex items-center px-4 py-2 border border-green-600 text-green-600 rounded-md hover:bg-green-50 transition-colors"
+        [class.bg-green-50]="isTracked"
+        [class.border-green-600]="isTracked"
+        [class.text-green-600]="isTracked"
+        [class.border-gray-300]="!isTracked"
+        [class.text-gray-700]="!isTracked"
+        class="inline-flex items-center px-4 py-2 border rounded-md hover:bg-green-50 transition-colors"
+        [title]="isTracked ? 'Retirer du suivi' : 'Suivre cette candidature'"
       >
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-        </svg>
-        Suivre cette candidature
+        @if (isTracked) {
+          <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+          En suivi
+        } @else {
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          </svg>
+          Suivre cette candidature
+        }
       </button>
     }
   </div>
