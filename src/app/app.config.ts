@@ -8,13 +8,15 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { errorInterceptor } from './core/interceptors/error-interceptor';
 import { usaJobsAuthInterceptor } from './core/interceptors/usa-jobs-auth-interceptor';
+import { FavoritesEffects } from './features/favorites/store/favorites.effects';
+import { favoritesReducer } from './features/favorites/store/favorites.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideStore({}),
-    provideEffects([]),
+    provideStore({favorites: favoritesReducer}),
+    provideEffects([FavoritesEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptors([errorInterceptor, usaJobsAuthInterceptor]))
