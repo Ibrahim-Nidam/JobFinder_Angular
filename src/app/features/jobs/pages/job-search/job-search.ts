@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { JobItem } from '../../components/job-item/job-item';
 import { Job } from '../../../../core/models/job';
 import { LoadingSpinner } from '../../../../shared/components/loading-spinner/loading-spinner';
@@ -9,6 +9,12 @@ import { Jobs } from '../../services/jobs';
 import { SearchFilters, SearchCriteria } from '../../components/search-filters/search-filters';
 import { Applications } from '../../../applications/services/applications';
 import { Auth } from '../../../../core/services/auth';
+import { Favorite } from '../../../../core/models/favorite';
+import { Application } from '../../../../core/models/application';
+import { Store } from '@ngrx/store';
+import * as FavoritesActions from '../../../favorites/store/favorites.actions';
+import { selectFavorites } from '../../../favorites/store/favorites.selectors';
+import { FavoritesStateService } from '../../../favorites/services/favorites-state.service';
 
 @Component({
   selector: 'app-job-search',
@@ -24,18 +30,45 @@ export class JobSearch {
   currentPage: number = 1;
   totalPages: number = 0;
   hasSearched: boolean = false;
+  favorites: Favorite[] = [];
+  applications: Application[] = [];
   
   private currentKeyword: string = '';
   private currentLocation: string = '';
-
-  constructor(
-    private jobService: Jobs,
-    private applicationsService: Applications,
-    private authService: Auth
-  ) {}
+  private jobService = inject(Jobs);
+  private applicationsService = inject(Applications);
+  private authService = inject(Auth);
+  private store = inject(Store);
+  private favoritesStateService = inject(FavoritesStateService);
 
   ngOnInit(): void {
     this.loadJobs();
+    this.loadFavorites();
+    this.loadApplications();
+  }
+
+  loadFavorites(): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.store.dispatch(FavoritesActions.loadFavorites({ userId: currentUser.id }));
+      this.store.select(selectFavorites).subscribe((favorites) => {
+        this.favorites = favorites;
+      });
+    }
+  }
+
+  loadApplications(): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.applicationsService.getApplications(currentUser.id).subscribe({
+        next: (applications) => {
+          this.applications = applications;
+        },
+        error: (err) => {
+          console.error('Error loading applications', err);
+        }
+      });
+    }
   }
 
   onSearch(criteria: SearchCriteria): void {
@@ -73,40 +106,69 @@ export class JobSearch {
   }
 
   onAddToFavorites(job: Job): void {
-    console.log('add to favorites', job);
-    
+    const currentUser = this.authService.getCurrentUser();
+    if(!currentUser){
+      this.errorMessage = 'Vous devez être connecté pour ajouter un favori';
+      setTimeout(() => (this.errorMessage = ''), 3000);
+      return;
+    }
+
+    try {
+      this.favoritesStateService.toggleFavorite(job).subscribe({
+        next: (added) => {
+          if (added) {
+            this.successMessage = 'Offre ajoutée aux favoris';
+          } else {
+            this.successMessage = 'Offre retirée des favoris';
+          }
+          setTimeout(() => (this.successMessage = ''), 3000);
+        },
+        error: (err) => {
+          this.errorMessage = err.message || 'Erreur lors de la modification du favori';
+          setTimeout(() => (this.errorMessage = ''), 3000);
+        }
+      });
+    } catch (err: any) {
+      this.errorMessage = err.message || 'Erreur lors de la modification du favori';
+      setTimeout(() => (this.errorMessage = ''), 3000);
+    }
   }
 
   onTrackApplication(job: Job): void {
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser) {
       this.errorMessage = 'Vous devez être connecté pour suivre une candidature';
+      setTimeout(() => (this.errorMessage = ''), 3000);
       return;
     }
 
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.applicationsService.trackApplication(currentUser.id, job).subscribe({
-      next: (result) => {
-        if (result === 'exists') {
-          this.errorMessage = 'Cette candidature est déjà dans votre suivi';
-          setTimeout(() => (this.errorMessage = ''), 3000);
-          return;
+    this.applicationsService.toggleTrackedApplication(currentUser.id, job).subscribe({
+      next: (action) => {
+        if (action === 'added') {
+          this.loadApplications(); 
+          this.successMessage = 'Candidature ajoutée à votre suivi';
+        } else {
+          this.loadApplications();
+          this.successMessage = 'Candidature retirée du suivi';
         }
-
-        this.successMessage = 'Candidature ajoutée à votre suivi';
         setTimeout(() => (this.successMessage = ''), 3000);
       },
       error: (err) => {
-        console.error('track application error', err);
-        this.errorMessage = err.message || 'Erreur lors de l\'ajout de la candidature';
+        console.error('toggle application error', err);
+        this.errorMessage = err.message || 'Erreur lors de la modification de la candidature';
         setTimeout(() => (this.errorMessage = ''), 3000);
       },
     });
   }
 
   isFavorite(job: Job): boolean {
-    return false;
+    return this.favorites.some(f => f.offerId === job.id);
+  }
+
+  isTracked(job: Job): boolean {
+    return this.applications.some(app => app.offerId === job.id);
   }
 }

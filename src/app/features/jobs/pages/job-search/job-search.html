@@ -47,6 +47,7 @@
             <app-job-item
               [job]="job"
               [isFavorite]="isFavorite(job)"
+              [isTracked]="isTracked(job)"
               (addToFavorites)="onAddToFavorites($event)"
               (trackApplication)="onTrackApplication($event)"
             />
