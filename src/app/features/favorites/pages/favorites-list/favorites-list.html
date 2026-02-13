@@ -1,1 +1,37 @@
-<p>favorites-list works!</p>
+<app-header></app-header>
+
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Mes Favoris</h1>
+
+    @if (error$ | async; as error) {
+      <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md mb-6">
+        {{ error }}
+      </div>
+    }
+
+    @if (loading$ | async) {
+      <app-loading-spinner></app-loading-spinner>
+    } @else {
+      @if (favorites$ | async; as favorites) {
+        @if (favorites.length === 0) {
+          <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 p-6 rounded-md text-center">
+            <p class="text-lg font-medium">Aucun favori pour le moment</p>
+            <p class="mt-2 text-sm">Ajoutez des offres à vos favoris depuis la page de recherche</p>
+          </div>
+        } @else {
+          <div class="grid grid-cols-1 gap-6">
+            @for (favorite of favorites; track favorite.id) {
+              <app-favorite-item
+                [favorite]="favorite"
+                (remove)="onRemoveFavorite($event)"
+              />
+            }
+          </div>
+        }
+      }
+    }
+  </div>
+</div>
+
+<app-footer></app-footer>
