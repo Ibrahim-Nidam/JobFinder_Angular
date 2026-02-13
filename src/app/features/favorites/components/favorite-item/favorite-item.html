@@ -1,1 +1,25 @@
-<p>favorite-item works!</p>
+<div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+  <div class="flex items-start justify-between">
+    <div class="flex-1">
+      <h3 class="text-xl font-bold text-gray-900 mb-2">{{ favorite.title }}</h3>
+      <p class="text-gray-600 mb-2">{{ favorite.company }}</p>
+      <div class="flex items-center gap-2 text-sm text-gray-500">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span>{{ favorite.location }}</span>
+      </div>
+    </div>
+    
+    <button
+      type="button"
+      (click)="onRemove()"
+      class="ml-4 inline-flex items-center px-3 py-2 border border-red-600 text-red-600 rounded-md hover:bg-red-50 transition-colors"
+      title="Retirer des favoris">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    </button>
+  </div>
+</div>

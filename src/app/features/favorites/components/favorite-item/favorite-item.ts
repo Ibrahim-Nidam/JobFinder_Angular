@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Favorite } from '../../../../core/models/favorite';
 
 @Component({
   selector: 'app-favorite-item',
@@ -7,5 +8,10 @@ import { Component } from '@angular/core';
   styleUrl: './favorite-item.css',
 })
 export class FavoriteItem {
+  @Input() favorite!: Favorite;
+  @Output() remove = new EventEmitter<Favorite>();
 
+  onRemove(): void {
+    this.remove.emit(this.favorite);
+  }
 }
