@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { map, Observable} from 'rxjs';
 import { UserAuth, User } from '../models/user';
 import { Storage } from './storage';
@@ -9,8 +9,8 @@ import { Storage } from './storage';
 })
 export class Auth {
   private apiUrl = 'http://localhost:3000/users';
-
-  constructor(private http: HttpClient, private storageService: Storage){}
+  private http = inject(HttpClient);
+  private storageService = inject(Storage);
 
   register(user: User): Observable<UserAuth> {
     return this.http.post<User>(this.apiUrl, user).pipe(

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 export interface SearchCriteria {
@@ -17,8 +17,9 @@ export class SearchFilters {
   @Output() search = new EventEmitter<SearchCriteria>();
 
   searchForm: FormGroup;
+  private fb = inject(FormBuilder);
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.searchForm = this.fb.group({
       keyword: [''],
       location: ['']

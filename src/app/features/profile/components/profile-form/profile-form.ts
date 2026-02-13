@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { User, UserAuth } from '../../../../core/models/user';
+import { User, UserAuth, passwordMatchValidator } from '../../../../core/models/user';
 
 @Component({
   selector: 'app-profile-form',
@@ -15,8 +15,9 @@ export class ProfileForm implements OnChanges {
   @Output() delete = new EventEmitter<void>();
 
   form: FormGroup;
+  private fb = inject(FormBuilder);
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.form = this.fb.group(
       {
         nom: ['', [Validators.required, Validators.minLength(2)]],
@@ -25,7 +26,7 @@ export class ProfileForm implements OnChanges {
         password: ['', [Validators.minLength(6)]],
         confirmPassword: ['']
       },
-      { validators: this.passwordMatchValidator }
+      { validators: passwordMatchValidator }
     );
   }
 
@@ -39,17 +40,6 @@ export class ProfileForm implements OnChanges {
         confirmPassword: ''
       });
     }
-  }
-
-  passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
-    const password = form.get('password')?.value as string;
-    const confirmPassword = form.get('confirmPassword')?.value as string;
-
-    if (password && password !== confirmPassword) {
-      return { passwordMismatch: true };
-    }
-
-    return null;
   }
 
   onSubmit(): void {

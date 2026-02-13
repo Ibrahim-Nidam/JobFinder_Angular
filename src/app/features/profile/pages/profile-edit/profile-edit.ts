@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '../../../../core/services/auth';
 import { Storage } from '../../../../core/services/storage';
@@ -18,12 +18,11 @@ export class ProfileEdit {
   isLoading: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
+  private authService = inject(Auth);
+  private storageService = inject(Storage);
+  private router = inject(Router);
 
-  constructor(
-    private authService: Auth,
-    private storageService: Storage,
-    private router: Router
-  ) {
+  constructor() {
     this.user = this.authService.getCurrentUser();
   }
 

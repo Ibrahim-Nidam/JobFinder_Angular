@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../../../core/services/auth';
@@ -14,12 +14,11 @@ export class Login {
   loginForm: FormGroup;
   errorMessage: string = '';
   isLoading: boolean = false;
+  private fb = inject(FormBuilder);
+  private authService = inject(Auth);
+  private router = inject(Router);
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: Auth,
-    private router: Router
-  ) {
+  constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]

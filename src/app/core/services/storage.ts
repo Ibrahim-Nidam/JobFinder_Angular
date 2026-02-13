@@ -7,8 +7,6 @@ import { UserAuth } from '../models/user';
 export class Storage {
   private readonly USER_KEY = 'currentUser';
 
-  constructor(){}
-
   saveUser(user: UserAuth): void {
     sessionStorage.setItem(this.USER_KEY, JSON.stringify(user));
   }

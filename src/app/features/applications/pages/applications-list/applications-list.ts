@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Application, ApplicationStatus } from '../../../../core/models/application';
 import { Applications } from '../../services/applications';
 import { Auth } from '../../../../core/services/auth';
@@ -18,11 +18,8 @@ export class ApplicationsList implements OnInit {
   isLoading: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
-
-  constructor(
-    private applicationsService: Applications,
-    private authService: Auth
-  ) {}
+  private applicationsService = inject(Applications);
+  private authService = inject(Auth);
 
   ngOnInit(): void {
     this.loadApplications();

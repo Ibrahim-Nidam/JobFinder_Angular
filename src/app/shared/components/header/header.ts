@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
 
@@ -9,7 +9,8 @@ import { Auth } from '../../../core/services/auth';
   styleUrl: './header.css',
 })
 export class Header {
-  constructor(public authService: Auth, private router: Router) {}
+  public authService = inject(Auth);
+  private router = inject(Router);
 
   onLogout(): void {
     this.authService.logout();

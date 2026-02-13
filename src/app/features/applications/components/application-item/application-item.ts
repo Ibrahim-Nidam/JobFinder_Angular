@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Application, ApplicationStatus } from '../../../../core/models/application';
+import { Application, ApplicationStatus, APPLICATION_STATUSES } from '../../../../core/models/application';
 import { StatusBadge } from '../status-badge/status-badge';
+import { DateFormatPipe } from '../../../../shared/pipes/date-format.pipe';
 
 @Component({
   selector: 'app-application-item',
-  imports: [StatusBadge, FormsModule],
+  imports: [StatusBadge, FormsModule, DateFormatPipe],
   templateUrl: './application-item.html',
   styleUrl: './application-item.css',
 })
@@ -17,12 +18,7 @@ export class ApplicationItem {
 
   isEditingNotes: boolean = false;
   editedNotes: string = '';
-
-  statuses: { value: ApplicationStatus; label: string }[] = [
-    { value: 'en_attente', label: 'En attente' },
-    { value: 'accepte', label: 'Accepté' },
-    { value: 'refuse', label: 'Refusé' },
-  ];
+  readonly statuses = APPLICATION_STATUSES;
 
   onStatusChange(event: Event): void {
     const select = event.target as HTMLSelectElement;
@@ -51,16 +47,5 @@ export class ApplicationItem {
     if (confirm('Voulez-vous vraiment supprimer cette candidature ?')) {
       this.delete.emit(this.application.id!);
     }
-  }
-
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   }
 }

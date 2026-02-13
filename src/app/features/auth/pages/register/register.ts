@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../../../core/services/auth';
+import { passwordMatchValidator } from '../../../../core/models/user';
 
 @Component({
   selector: 'app-register',
@@ -13,12 +14,11 @@ export class Register {
   registerForm: FormGroup;
   errorMessage: string = '';
   isLoading: boolean = false;
+  private fb = inject(FormBuilder);
+  private authService = inject(Auth);
+  private router = inject(Router);
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: Auth,
-    private router: Router
-  ) {
+  constructor() {
     this.registerForm = this.fb.group({
       nom: ['', [Validators.required, Validators.minLength(2)]],
       prenom: ['', [Validators.required, Validators.minLength(2)]],
@@ -26,19 +26,8 @@ export class Register {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]]
     }, {
-      validators: this.passwordMatchValidator
+      validators: passwordMatchValidator
     });
-  }
-
-  passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-    
-    if (password !== confirmPassword) {
-      return { passwordMismatch: true };
-    }
-    
-    return null;
   }
 
   onSubmit(): void {

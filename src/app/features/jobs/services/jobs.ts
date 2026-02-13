@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { JobApi } from '../../../core/services/job-api';
 import { Observable } from 'rxjs';
 import { Job } from '../../../core/models/job';
@@ -8,8 +8,7 @@ import { Job } from '../../../core/models/job';
 })
 export class Jobs {
   private readonly ITEMS_PER_PAGE = 10;
-
-  constructor(private jobApi: JobApi) {}
+  private jobApi = inject(JobApi);
 
   searchJobs(keyword: string, location: string, page: number = 1): Observable<any> {
     return this.jobApi.searchJobs(keyword, location, page);

@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Job } from '../models/job';
 import { environment } from '../../../environments/environment';
@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class JobApi {
   private apiUrl = environment.usaJobsApi.url;
-  constructor(private http: HttpClient){}
+  private http = inject(HttpClient);
 
   searchJobs(keyword: string, location: string, page: number = 1): Observable<any> {
     let params = new HttpParams()

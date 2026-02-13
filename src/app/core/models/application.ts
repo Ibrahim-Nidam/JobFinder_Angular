@@ -13,3 +13,9 @@ export interface Application {
 }
 
 export type ApplicationStatus = 'en_attente' | 'accepte' | 'refuse';
+
+export const APPLICATION_STATUSES: { value: ApplicationStatus; label: string }[] = [
+    { value: 'en_attente', label: 'En attente' },
+    { value: 'accepte', label: 'Accepté' },
+    { value: 'refuse', label: 'Refusé' },
+];

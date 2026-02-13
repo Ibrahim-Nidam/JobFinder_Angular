@@ -1,23 +1,27 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Job } from '../../../../core/models/job';
 import { Router } from '@angular/router';
 import { Auth } from '../../../../core/services/auth';
+import { DateFormatPipe } from '../../../../shared/pipes/date-format.pipe';
+import { JobLocationPipe } from '../../../../shared/pipes/job-location.pipe';
 
 @Component({
   selector: 'app-job-item',
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, DateFormatPipe, JobLocationPipe],
   templateUrl: './job-item.html',
   styleUrl: './job-item.css',
 })
 export class JobItem {
   @Input() job!: Job;
   @Input() isFavorite: boolean = false;
+  @Input() isTracked: boolean = false;
   
   @Output() addToFavorites = new EventEmitter<Job>();
   @Output() trackApplication = new EventEmitter<Job>();
 
-  constructor(public authService: Auth, private router: Router){}
+  public authService = inject(Auth);
+  private router = inject(Router);
 
   onAddToFavorites() :void {
     this.addToFavorites.emit(this.job);
@@ -30,19 +34,6 @@ export class JobItem {
   onViewDetails(): void {
     this.router.navigate(['/jobs/details', this.job.id], {
       state: { job: this.job }
-    });
-  }
-
-  getLocation(): string {
-    return this.job.locations && this.job.locations.length > 0 ? this.job.locations[0].name : 'not specified';
-  }
-
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
     });
   }
 }

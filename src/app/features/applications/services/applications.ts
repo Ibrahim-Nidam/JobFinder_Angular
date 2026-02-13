@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { map, Observable, of, switchMap } from 'rxjs';
 import { Application, ApplicationStatus } from '../../../core/models/application';
 import { Job } from '../../../core/models/job';
@@ -9,8 +9,7 @@ import { Job } from '../../../core/models/job';
 })
 export class Applications {
   private apiUrl = 'http://localhost:3000/applications';
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getApplications(userId: number): Observable<Application[]> {
     return this.http.get<Application[]>(`${this.apiUrl}?userId=${userId}`);
