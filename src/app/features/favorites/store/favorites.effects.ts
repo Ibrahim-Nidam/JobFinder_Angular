@@ -31,7 +31,6 @@ export class FavoritesEffects {
             ofType(FavoriteActions.addFavorite),
             withLatestFrom(this.store.select(selectFavorites)),
             switchMap(([{ favorite }, existingFavorites]) => {
-                // Check for duplicates
                 const isDuplicate = existingFavorites.some(
                     (f) => f.offerId === favorite.offerId && f.userId === favorite.userId
                 );
@@ -62,5 +61,29 @@ export class FavoritesEffects {
                 )
             )
         )
+    );
+
+    handleFavoritesMessages$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(
+                    FavoriteActions.addFavoriteSuccess,
+                    FavoriteActions.addFavoriteFailure,
+                    FavoriteActions.removeFavoriteSuccess,
+                    FavoriteActions.removeFavoriteFailure
+                ),
+                map((action) => {
+                    if ('favorite' in action || 'id' in action) {
+                        if ('favorite' in action) {
+                            console.log('Favorite added successfully:', action.favorite);
+                        } else if ('id' in action) {
+                            console.log('Favorite removed successfully:', action.id);
+                        }
+                    } else if ('error' in action) {
+                        console.error('Favorites action failed:', action.error);
+                    }
+                })
+            ),
+        { dispatch: false }
     );
 }
