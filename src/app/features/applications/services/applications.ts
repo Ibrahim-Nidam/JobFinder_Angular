@@ -67,4 +67,33 @@ export class Applications {
       })
     );
   }
+
+  toggleTrackedApplication(userId: number, job: Job, apiSource: string = 'usajobs'): Observable<'added' | 'removed'> {
+    return this.checkIfApplicationExists(userId, job.id).pipe(
+      switchMap((existingApps) => {
+        if (existingApps.length > 0) {
+          return this.deleteApplication(existingApps[0].id!).pipe(
+            map(() => 'removed' as const)
+          );
+        }
+
+        const newApplication: Application = {
+          userId,
+          offerId: job.id,
+          apiSource,
+          title: job.name,
+          company: job.company.name,
+          location: job.locations && job.locations.length > 0 ? job.locations[0].name : 'Non specifie',
+          url: job.refs.landing_page,
+          status: 'en_attente',
+          notes: '',
+          dateAdded: new Date().toISOString(),
+        };
+
+        return this.addApplication(newApplication).pipe(
+          map(() => 'added' as const)
+        );
+      })
+    );
+  }
 }
